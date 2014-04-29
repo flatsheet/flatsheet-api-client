@@ -5,7 +5,6 @@ var wait = require('event-stream').wait;
 module.exports = Flatsheet;
 
 function Flatsheet (opts) {
-  this.username = opts.username;
   this.token = opts.token || '';
   this.host = opts.host || 'https://app.flatsheet.io';
   this.apiVersion = opts.apiVersion || '/v1/';
