@@ -5,6 +5,9 @@ var wait = require('event-stream').wait;
 module.exports = Flatsheet;
 
 function Flatsheet (opts) {
+  if (!(this instanceof Flatsheet)) return new Flatsheet(game, opts)
+  opts || (opts = {});
+
   this.token = opts.token || '';
   this.host = opts.host || 'https://app.flatsheet.io';
   this.apiVersion = opts.apiVersion || '/v1/';
