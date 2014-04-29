@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
-    "build-umd": "browserify index.js --s Flatsheet | uglifyjs -c > flatsheet.min.js"
+    "build-umd": "browserify index.js --standalone Flatsheet | uglifyjs -c > flatsheet.min.js"
   },
   "author": "",
   "license": "MIT",
