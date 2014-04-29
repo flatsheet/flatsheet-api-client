@@ -14,7 +14,7 @@ npm install --save flatsheet
 ## Example usage
 
 ```
-var Flatsheet = require('../');
+var Flatsheet = require('flatsheet');
 
 var flatsheet = new Flatsheet({
   host: 'https://app.flatsheet.io',
@@ -37,6 +37,8 @@ flatsheet.sheet('tcuxl49owsafl-jgp5qrta', function (err, res){
 ### Create flatsheet object
 
 ```
+var Flatsheet = require('flatsheet');
+
 var flatsheet = new Flatsheet({
   host: 'https://app.flatsheet.io',
   token: 'YOUR_API_KEY'
