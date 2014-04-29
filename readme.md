@@ -2,6 +2,9 @@
 
 > API client for http://flatsheet.io
 
+## Todos
+Create, update, and destroy methods.
+
 ## Install
 
 ```
