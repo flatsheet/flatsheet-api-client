@@ -27,9 +27,9 @@ Flatsheet.prototype.get = function get (path, params, cb) {
     json: true
   };
 
-  request(opts, getRows)
+  request(opts, getResponse);
 
-  function getRows (error, response, body){
+  function getResponse (error, response, body){
     if (cb){
       if (error) return cb(error);
       return cb(null, body);
