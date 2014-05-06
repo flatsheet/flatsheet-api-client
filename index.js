@@ -1,10 +1,5 @@
 var qs = require('querystring');
-
-console.log(process.browser)
-
-var request;
-if (process.browser) request = require('browser-request');
-else request = require('request');
+var request = require('request');
 
 module.exports = Flatsheet;
 
