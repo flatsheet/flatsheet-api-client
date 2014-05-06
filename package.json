@@ -1,6 +1,6 @@
 {
   "name": "flatsheet",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "javascript client for flatsheet",
   "main": "index.js",
   "browser": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "node test.js",
-    "build-umd": "browserify index.js --standalone Flatsheet | uglifyjs -c > flatsheet.min.js"
+    "build-umd": "browserify index.js --standalone Flatsheet | uglifyjs -c > flatsheet-0.1.6.min.js"
   },
   "author": "",
   "license": "MIT",
