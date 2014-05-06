@@ -10,8 +10,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "hyperquest": "^0.3.0",
-    "event-stream": "^3.1.2"
+    "browser-request": "^0.3.1",
+    "request": "^2.34.0"
   },
   "devDependencies": {
     "tape": "^2.12.3",

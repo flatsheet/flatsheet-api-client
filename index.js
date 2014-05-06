@@ -1,5 +1,10 @@
 var qs = require('querystring');
-var hyperquest = require('hyperquest');
+
+console.log(process.browser)
+
+var request;
+if (process.browser) request = require('browser-request');
+else request = require('request');
 
 module.exports = Flatsheet;
 
@@ -21,32 +26,20 @@ Flatsheet.prototype.sheet = function sheet (id, cb) {
 };
 
 Flatsheet.prototype.get = function get (path, params, cb) {
-  var buffer = '';
+  var opts = {
+    uri: this.fullUrl(path, params), 
+    headers: { 'Authorization': 'Token token=' + this.token }, 
+    json: true
+  };
 
-  var res = hyperquest.get(this.fullUrl(path, params), {
-    headers: { 'Authorization': 'Token token=' + this.token }
-  },
-  function(error, res){
+  request(opts, getRows)
+
+  function getRows (error, response, body){
     if (cb){
       if (error) return cb(error);
-
-      res.on('error', function (err) {
-        return cb(err);
-      });
-
-      res.on('data', function(data){
-        buffer += data.toString();
-      });
-
-      res.on('end', function (data) {
-        try {
-          cb(null, JSON.parse(buffer));
-        } catch (e) {
-          cb(e);
-        }
-      });
+      return cb(null, body);
     }
-  });
+  }
 };
 
 Flatsheet.prototype.fullUrl = function fullUrl (path, params) {
