@@ -4,7 +4,7 @@ var request = require('request');
 module.exports = Flatsheet;
 
 function Flatsheet (opts) {
-  if (!(this instanceof Flatsheet)) return new Flatsheet(game, opts)
+  if (!(this instanceof Flatsheet)) return new Flatsheet(opts)
   opts || (opts = {});
 
   this.token = opts.token || '';
