@@ -1,6 +1,6 @@
 {
   "name": "flatsheet",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "javascript client for flatsheet",
   "main": "index.js",
   "browser": {
