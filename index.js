@@ -1,4 +1,3 @@
-var qs = require('querystring');
 var request = require('request');
 
 module.exports = Flatsheet;
@@ -22,8 +21,9 @@ Flatsheet.prototype.sheet = function sheet (id, cb) {
 
 Flatsheet.prototype.get = function get (path, params, cb) {
   var opts = {
-    uri: this.fullUrl(path, params), 
+    uri: this.fullUrl(path, params),
     headers: { 'Authorization': 'Token token=' + this.token }, 
+    qs: params,
     json: true
   };
 
@@ -38,10 +38,5 @@ Flatsheet.prototype.get = function get (path, params, cb) {
 };
 
 Flatsheet.prototype.fullUrl = function fullUrl (path, params) {
-  var q = query(params);
-  return this.host + '/api' + this.apiVersion + path + '/' + q;
+  return this.host + '/api' + this.apiVersion + path + '/';
 };
-
-function query (options) {
-  return '?' + qs.stringify(options);
-}
