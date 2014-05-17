@@ -61,6 +61,58 @@ flatsheet.sheet('SLUG_OF_SHEET', function (err, res){
 });
 ```
 
+### Create a sheet
+
+```
+/* Set sheet properties */
+var sheet = {
+  name: 'pizza sheet!',
+  description: 'womp womp womp',
+  rows: [
+    {
+      pizza: 'pizza is really awesome!'
+    }
+  ],
+}
+
+/* create a new sheet */
+flatsheet.create(sheet, function(err, res){
+  console.log(err, res)
+});
+```
+
+### Update a sheet
+
+```
+flatsheet.sheet('SLUG_OF_SHEET', function (err, res) {
+  res.name = 'change the name of the sheet to this';
+
+  flatsheet.update(res, function (err, res) {
+    console.log(err, res)
+  });
+});
+```
+
+### Add a row to a sheet
+
+```
+var row = { pizza: 'wooaaaadddddaaaaoooo' };
+
+flatsheet.addRow('SLUG_OF_SHEET', row, function (err, res) {
+  console.log(err, res);
+});
+```
+
+### Destroy a sheet
+
+```
+flatsheet.destroy('SLUG_OF_SHEET', function () {
+  flatsheet.sheet('SLUG_OF_SHEET', function (err, res) {
+    console.log(err) /* { error: 404 } */
+  });
+});
+```
+
 ## Tests
 - Clone repository
 - Run `npm install`

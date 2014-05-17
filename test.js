@@ -84,7 +84,7 @@ test('destroy sheet', function (t) {
 
   flatsheet.create(sheet, function (err, res) {
     flatsheet.destroy(res.slug, function () {
-      flatsheet.sheet(res.slug, function (failErr, failRes){
+      flatsheet.sheet(res.slug, function (failErr, failRes) {
         t.equal(404, failErr.error);
       });
     });

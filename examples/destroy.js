@@ -18,8 +18,8 @@ var sheet = {
 
 flatsheet.create(sheet, function (err, res) {
   flatsheet.destroy(res.slug, function () {
-    flatsheet.sheet(res.slug, function (failErr, failRes){
+    flatsheet.sheet(res.slug, function (failErr, failRes) {
       console.log(failErr)
-    })
+    });
   });
 });
