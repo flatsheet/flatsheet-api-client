@@ -18,7 +18,6 @@ test('get specific sheet', function (t) {
   t.plan(1);
 
   flatsheet.sheet('5rdstpngj8hmlr0kfpzmyg', function (err, res){
-    console.log(err)
     t.ok(res);
   });
 });
