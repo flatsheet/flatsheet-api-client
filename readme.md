@@ -43,7 +43,7 @@ var flatsheet = new Flatsheet({
 ```
 
 The `host` argument is optional, only use it if you aren't using the hosted version of Flatsheet.
-The `token` argument is not needed for GET requests, only for PUT and POST requests.
+The `token` argument is not needed for GET requests, only for PUT, POST, and DELETE requests.
 
 ### Get list of user's sheets
 
