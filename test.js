@@ -89,3 +89,13 @@ test('destroy sheet', function (t) {
     });
   });
 });
+
+test('parse the slug of a sheet url', function(t) {
+  t.plan(3);
+
+  var expected = 'iq5jypw-c7vedyf9udjo-q';
+
+  t.equal(expected, flatsheet.parseSlug('iq5jypw-c7vedyf9udjo-q'));
+  t.equal(expected, flatsheet.parseSlug('https://app.flatsheet.io/api/v1/sheets/iq5jypw-c7vedyf9udjo-q'));
+  t.equal(expected, flatsheet.parseSlug('https://app.flatsheet.io/sheet/iq5jypw-c7vedyf9udjo-q'));
+});

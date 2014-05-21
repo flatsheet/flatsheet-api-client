@@ -17,8 +17,8 @@ Flatsheet.prototype.list = function list (username, cb) {
 
 Flatsheet.prototype.index = Flatsheet.prototype.list;
 
-Flatsheet.prototype.sheet = function sheet (id, cb) {
-  return this.req('get', 'sheets/' + id, {}, cb);
+Flatsheet.prototype.sheet = function sheet (slug, cb) {
+  return this.req('get', 'sheets/' + this.parseSlug(slug), {}, cb);
 };
 
 Flatsheet.prototype.fetch = Flatsheet.prototype.sheet;
@@ -30,17 +30,17 @@ Flatsheet.prototype.create = function create (sheet, cb) {
 
 Flatsheet.prototype.update = function update (sheet, cb) {
   sheet.rows = JSON.stringify(sheet.rows);
-  return this.req('put', 'sheets/' + sheet.id, { sheet: sheet }, cb);
+  return this.req('put', 'sheets/' + this.parseSlug(sheet.slug), { sheet: sheet }, cb);
 };
 
-Flatsheet.prototype.destroy = function destroy (id, cb) {
-  return this.req('delete', 'sheets/' + id, {}, cb);
+Flatsheet.prototype.destroy = function destroy (slug, cb) {
+  return this.req('delete', 'sheets/' + this.parseSlug(slug), {}, cb);
 };
 
-Flatsheet.prototype.addRow = function addRow (id, row, cb) {
+Flatsheet.prototype.addRow = function addRow (slug, row, cb) {
   var self = this;
 
-  this.sheet(id, function(err, req){
+  this.sheet(this.parseSlug(slug), function(err, req){
     var sheet = req;
     sheet.rows.push(row);
     self.update(sheet, cb);
@@ -71,3 +71,7 @@ Flatsheet.prototype.req = function req (method, path, params, cb) {
 Flatsheet.prototype.fullUrl = function fullUrl (path, params) {
   return this.host + '/api' + this.apiVersion + path + '/';
 };
+
+Flatsheet.prototype.parseSlug = function parseSlug (text) {
+  return text.substr(text.length - 22);
+}
