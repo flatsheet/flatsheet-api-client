@@ -52,17 +52,17 @@ Flatsheet.prototype.req = function req (method, path, params, cb) {
     method: method,
     uri: this.fullUrl(path, params),
     headers: { 'Authorization': 'Token token=' + this.token }, 
-    qs: params,
+    body: params,
     json: true
   };
-
+  
   if (typeof cb === 'undefined') return request(opts);
   else request(opts, getResponse);
 
   function getResponse (error, response, body){
     if (cb) {
       if (error) return cb(error);
-      if (response.statusCode > 400) return cb({ error: response.statusCode });
+      if (response.statusCode >= 400) return cb({ error: response.statusCode });
       return cb(null, body);
     }
   }
