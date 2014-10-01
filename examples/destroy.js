@@ -17,8 +17,10 @@ var sheet = {
 }
 
 flatsheet.create(sheet, function (err, res) {
-  flatsheet.destroy(res.slug, function () {
-    flatsheet.sheet(res.slug, function (failErr, failRes) {
+  console.log(res)
+  flatsheet.destroy(res.id, function (dErr, dRes) {
+    console.log(dErr, dRes)
+    flatsheet.sheet(res.id, function (failErr, failRes) {
       console.log(failErr)
     });
   });

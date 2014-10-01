@@ -6,7 +6,7 @@ var flatsheet = new Flatsheet({
 });
 
 /* list of user's sheets */
-var list = flatsheet.list('example');
+var list = flatsheet.list();
 
 list.pipe(process.stdout);
 

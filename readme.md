@@ -18,13 +18,13 @@ var Flatsheet = require('flatsheet');
 
 var flatsheet = new Flatsheet();
 
-/* list of user's sheets */
-flatsheet.list('example', function(err, res){
+/* list of sheets */
+flatsheet.list(function(err, res){
   console.log(err, res)
 });
 
 /* specific sheet */
-flatsheet.sheet('tcuxl49owsafl-jgp5qrta', function (err, res){
+flatsheet.sheet(sheetID, function (err, res){
   console.log(err, res);
 });
 ```
@@ -45,10 +45,10 @@ var flatsheet = new Flatsheet({
 The `host` argument is optional, only use it if you aren't using the hosted version of Flatsheet.
 The `token` argument is not needed for GET requests, only for PUT, POST, and DELETE requests.
 
-### Get list of user's sheets
+### Get list of sheets
 
 ```
-flatsheet.list('username', function(err, res){
+flatsheet.list(function(err, res){
   console.log(err, res)
 });
 ```
@@ -56,7 +56,7 @@ flatsheet.list('username', function(err, res){
 ### Get a specific sheet
 
 ```
-flatsheet.sheet('SLUG_OF_SHEET', function (err, res){
+flatsheet.sheet(sheetID, function (err, res){
   console.log(err, res);
 });
 ```
@@ -84,7 +84,7 @@ flatsheet.create(sheet, function(err, res){
 ### Update a sheet
 
 ```
-flatsheet.sheet('SLUG_OF_SHEET', function (err, res) {
+flatsheet.sheet(sheetID, function (err, res) {
   res.name = 'change the name of the sheet to this';
 
   flatsheet.update(res, function (err, res) {
@@ -98,7 +98,7 @@ flatsheet.sheet('SLUG_OF_SHEET', function (err, res) {
 ```
 var row = { pizza: 'wooaaaadddddaaaaoooo' };
 
-flatsheet.addRow('SLUG_OF_SHEET', row, function (err, res) {
+flatsheet.addRow(sheetID, row, function (err, res) {
   console.log(err, res);
 });
 ```
@@ -106,8 +106,8 @@ flatsheet.addRow('SLUG_OF_SHEET', row, function (err, res) {
 ### Destroy a sheet
 
 ```
-flatsheet.destroy('SLUG_OF_SHEET', function () {
-  flatsheet.sheet('SLUG_OF_SHEET', function (err, res) {
+flatsheet.destroy(sheetID, function () {
+  flatsheet.sheet(sheetID, function (err, res) {
     console.log(err) /* { error: 404 } */
   });
 });

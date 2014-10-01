@@ -9,7 +9,7 @@ var flatsheet = new Flatsheet({
 test('get list of sheets', function (t) {
   t.plan(1);
 
-  flatsheet.list('example', function(err, res){
+  flatsheet.list(function(err, res){
     t.ok(res);
   });
 });
@@ -17,7 +17,7 @@ test('get list of sheets', function (t) {
 test('get specific sheet', function (t) {
   t.plan(1);
 
-  flatsheet.sheet('5rdstpngj8hmlr0kfpzmyg', function (err, res){
+  flatsheet.sheet('1111bef0-4904-11e4-bca7-516af46d1e30', function (err, res){
     t.ok(res);
   });
 });
@@ -44,7 +44,7 @@ test('create sheet', function (t) {
 test('update sheet', function (t) {
   t.plan(1);
 
-  var slug = 'uptymoquolte3haozfnapw';
+  var slug = '1111bef0-4904-11e4-bca7-516af46d1e30';
 
   flatsheet.sheet(slug, function (err, res) {
     res.name = 'new name';
@@ -58,7 +58,7 @@ test('update sheet', function (t) {
 test('add row to sheet', function (t) {
   t.plan(1);
 
-  var slug = 'uptymoquolte3haozfnapw';
+  var slug = '1111bef0-4904-11e4-bca7-516af46d1e30';
 
   var row = { pizza: 'wooaaaadddddaaaaoooo' };
 
@@ -82,20 +82,10 @@ test('destroy sheet', function (t) {
   }
 
   flatsheet.create(sheet, function (err, res) {
-    flatsheet.destroy(res.slug, function () {
-      flatsheet.sheet(res.slug, function (failErr, failRes) {
+    flatsheet.destroy(res.id, function () {
+      flatsheet.sheet(res.id, function (failErr, failRes) {
         t.equal(404, failErr.error);
       });
     });
   });
-});
-
-test('parse the slug of a sheet url', function(t) {
-  t.plan(3);
-
-  var expected = 'iq5jypw-c7vedyf9udjo-q';
-
-  t.equal(expected, flatsheet.parseSlug('iq5jypw-c7vedyf9udjo-q'));
-  t.equal(expected, flatsheet.parseSlug('https://app.flatsheet.io/api/v1/sheets/iq5jypw-c7vedyf9udjo-q'));
-  t.equal(expected, flatsheet.parseSlug('https://app.flatsheet.io/sheet/iq5jypw-c7vedyf9udjo-q'));
 });

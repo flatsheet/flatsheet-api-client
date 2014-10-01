@@ -6,6 +6,6 @@ var flatsheet = new Flatsheet({
 });
 
 /* list of user's sheets */
-flatsheet.list('example', function(err, res){
+flatsheet.list(function(err, res){
   console.log(err, res)
 });
