@@ -6,7 +6,11 @@ function Flatsheet (opts) {
   if (!(this instanceof Flatsheet)) return new Flatsheet(opts);
   opts || (opts = {});
 
-  this.token = opts.token || '';
+  this.account = {
+    username: opts.username || '',
+    password: opts.password || ''
+  }
+  
   this.host = opts.host || 'https://app.flatsheet.io';
   this.apiVersion = opts.apiVersion || '/v2/';
 }
@@ -50,7 +54,9 @@ Flatsheet.prototype.req = function req (method, path, params, cb) {
   var opts = {
     method: method,
     uri: this.fullUrl(path, params),
-  //  headers: { 'Authorization': 'Token ' + this.token }, 
+    headers: {
+      'Authorization': this.account.username + ':' + this.account.password
+    }, 
     body: params,
     json: true
   };
