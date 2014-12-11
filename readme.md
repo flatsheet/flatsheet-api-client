@@ -1,6 +1,6 @@
-# flatsheet-javascript-client
+# flatsheet-api-client
 
-> API client for http://flatsheet.io
+> API client for http://github.com/flatsheet/flatsheet
 
 ## Todos
 Create, update, and destroy methods.
@@ -8,13 +8,13 @@ Create, update, and destroy methods.
 ## Install
 
 ```
-npm install --save flatsheet
+npm install --save flatsheet-api-client
 ```
 
 ## Example usage
 
 ```
-var Flatsheet = require('flatsheet');
+var Flatsheet = require('flatsheet-api-client');
 
 var flatsheet = new Flatsheet();
 
@@ -34,7 +34,7 @@ flatsheet.sheet(sheetID, function (err, res){
 ### Create flatsheet object
 
 ```
-var Flatsheet = require('flatsheet');
+var Flatsheet = require('flatsheet-api-client');
 
 var flatsheet = new Flatsheet({
   host: 'https://app.flatsheet.io',
