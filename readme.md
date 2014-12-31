@@ -34,7 +34,7 @@ flatsheet.sheet(sheetID, function (err, res){
 ### Create flatsheet object
 
 ```
-var Flatsheet = require('flatsheet');
+var Flatsheet = require('flatsheet-api-client');
 
 var flatsheet = new Flatsheet({
   host: 'https://app.flatsheet.io',
