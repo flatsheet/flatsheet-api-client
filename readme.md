@@ -1,6 +1,8 @@
 # flatsheet-api-client
 
-> API client for http://github.com/flatsheet/flatsheet
+> JavaScript/node API client for http://github.com/flatsheet/flatsheet
+
+
 
 ## Todos
 Create, update, and destroy methods.

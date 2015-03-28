@@ -21,6 +21,10 @@ Flatsheet.prototype.list = function list (cb) {
 
 Flatsheet.prototype.index = Flatsheet.prototype.list;
 
+Flatsheet.prototype.listAccounts = function listAccounts (cb) {
+  return this.req('get', 'accounts', {}, cb);
+};
+
 Flatsheet.prototype.sheet = function sheet (id, cb) {
   return this.req('get', 'sheets/' + id, {}, cb);
 };
