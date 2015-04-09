@@ -1,15 +1,19 @@
 {
   "name": "flatsheet-api-client",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "javascript client for flatsheet",
   "main": "index.js",
   "browser": {
     "request": "xhr"
   },
   "scripts": {
-    "test": "node test.js",
+    "docs-html": "documentation index.js -g -f html -o docs/",
+    "docs-md": "documentation index.js -f md -o docs/readme.md",
+    "docs": "npm run docs-html && npm run docs-md",
+    "test": "standard && node test.js",
     "build-umd": "browserify index.js --standalone Flatsheet -o flatsheet.min.js && unpathify flatsheet.min.js",
-    "uglify": "uglifyjs flatsheet.min.js -o flatsheet.min.js"
+    "uglify": "uglifyjs flatsheet.min.js -o flatsheet.min.js",
+    "dist": "npm run build-umd && npm run uglify"
   },
   "author": "",
   "license": "MIT",
@@ -18,9 +22,12 @@
     "xhr": "^1.6.1"
   },
   "devDependencies": {
-    "tape": "^2.12.3",
-    "browserify": "^3.44.2",
     "beefy": "^1.1.0",
+    "browserify": "^3.44.2",
+    "documentation": "^1.0.2",
+    "standard": "^3.3.2",
+    "tap-spec": "^3.0.0",
+    "tape": "^2.12.3",
     "uglify-js": "^2.4.13",
     "unpathify": "^0.1.1"
   }

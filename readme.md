@@ -21,12 +21,12 @@ var Flatsheet = require('flatsheet-api-client');
 var flatsheet = new Flatsheet();
 
 /* list of sheets */
-flatsheet.list(function(err, res){
+flatsheet.sheets.list(function(err, res){
   console.log(err, res)
 });
 
 /* specific sheet */
-flatsheet.sheet(sheetID, function (err, res){
+flatsheet.sheets.get(sheetID, function (err, res){
   console.log(err, res);
 });
 ```
@@ -50,7 +50,7 @@ The `token` argument is not needed for GET requests, only for PUT, POST, and DEL
 ### Get list of sheets
 
 ```
-flatsheet.list(function(err, res){
+flatsheet.sheets.list(function(err, res){
   console.log(err, res)
 });
 ```
@@ -58,7 +58,7 @@ flatsheet.list(function(err, res){
 ### Get a specific sheet
 
 ```
-flatsheet.sheet(sheetID, function (err, res){
+flatsheet.sheets.get(sheetID, function (err, res){
   console.log(err, res);
 });
 ```
@@ -78,7 +78,7 @@ var sheet = {
 }
 
 /* create a new sheet */
-flatsheet.create(sheet, function(err, res){
+flatsheet.sheets.create(sheet, function(err, res){
   console.log(err, res)
 });
 ```
@@ -86,10 +86,10 @@ flatsheet.create(sheet, function(err, res){
 ### Update a sheet
 
 ```
-flatsheet.sheet(sheetID, function (err, res) {
+flatsheet.sheets.get(sheetID, function (err, res) {
   res.name = 'change the name of the sheet to this';
 
-  flatsheet.update(res, function (err, res) {
+  flatsheet.sheets.update(res, function (err, res) {
     console.log(err, res)
   });
 });
@@ -100,7 +100,7 @@ flatsheet.sheet(sheetID, function (err, res) {
 ```
 var row = { pizza: 'wooaaaadddddaaaaoooo' };
 
-flatsheet.addRow(sheetID, row, function (err, res) {
+flatsheet.sheets.addRow(sheetID, row, function (err, res) {
   console.log(err, res);
 });
 ```
@@ -108,8 +108,8 @@ flatsheet.addRow(sheetID, row, function (err, res) {
 ### Destroy a sheet
 
 ```
-flatsheet.destroy(sheetID, function () {
-  flatsheet.sheet(sheetID, function (err, res) {
+flatsheet.sheets.delete(sheetID, function () {
+  flatsheet.sheets.get(sheetID, function (err, res) {
     console.log(err) /* { error: 404 } */
   });
 });

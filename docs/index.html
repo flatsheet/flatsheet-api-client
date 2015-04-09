@@ -1,0 +1,712 @@
+<html>
+<head>
+  <title>Documentation</title>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation'>
+  <div class='px2'>
+    <div class='clearfix flex flex-stretch mxn2'>
+      <div class='relative top-0 bottom-0 right-0 px2 py2 sm-col-3 md-col-2 sm-show'>
+        <div class='font-smaller fixed sm-col-3 md-col-2 top-0 bottom-0 left-0 overflow-auto black bg-cloudy'>
+          <a href="/" class="h5 mt2 button block button-transparent">Documentation</a>
+            <a
+              href='#accounts'
+              class='button regular block button-transparent'>
+              <code>Accounts</code>
+            </a>
+              <a
+                href='#accounts/update'
+                class='button button-indent regular block button-transparent'>
+                <code>#update</code>
+              </a>
+              <a
+                href='#accounts/list'
+                class='button button-indent regular block button-transparent'>
+                <code>#list</code>
+              </a>
+              <a
+                href='#accounts/get'
+                class='button button-indent regular block button-transparent'>
+                <code>#get</code>
+              </a>
+              <a
+                href='#accounts/delete'
+                class='button button-indent regular block button-transparent'>
+                <code>#delete</code>
+              </a>
+              <a
+                href='#accounts/create'
+                class='button button-indent regular block button-transparent'>
+                <code>#create</code>
+              </a>
+            <a
+              href='#flatsheet'
+              class='button regular block button-transparent'>
+              <code>Flatsheet</code>
+            </a>
+            <a
+              href='#sheets'
+              class='button regular block button-transparent'>
+              <code>Sheets</code>
+            </a>
+              <a
+                href='#sheets/get'
+                class='button button-indent regular block button-transparent'>
+                <code>#get</code>
+              </a>
+              <a
+                href='#sheets/update'
+                class='button button-indent regular block button-transparent'>
+                <code>#update</code>
+              </a>
+              <a
+                href='#sheets/delete'
+                class='button button-indent regular block button-transparent'>
+                <code>#delete</code>
+              </a>
+              <a
+                href='#sheets/create'
+                class='button button-indent regular block button-transparent'>
+                <code>#create</code>
+              </a>
+              <a
+                href='#sheets/addrow'
+                class='button button-indent regular block button-transparent'>
+                <code>#addRow</code>
+              </a>
+              <a
+                href='#sheets/list'
+                class='button button-indent regular block button-transparent'>
+                <code>#list</code>
+              </a>
+        </div>
+      </div>
+      <div class='sm-col sm-col-9 md-col-10 flex flex-column'>
+        <div class='flex-auto full-width'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/accounts.js#L12-L15'><code>accounts.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='accounts' href='#accounts'>
+                  <code>
+                    Accounts<span class='gray'>(client)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Flatsheet Accounts</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>client</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></td>
+                        <td></td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre><span class="hljs-keyword">var</span> flatsheet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'flatsheet-api-client'</span>);
+            <span class="hljs-keyword">var</span> client = flatsheet();
+            client.accounts.list()</pre>
+            
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/accounts.js#L61-L73'><code>accounts.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='accounts/update' href='#accounts/update'>
+                  <code>
+                    update<span class='gray'>(callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Update an account</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and account arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.acounts.update(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, account)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/accounts.js#L37-L49'><code>accounts.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='accounts/list' href='#accounts/list'>
+                  <code>
+                    list<span class='gray'>(callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Get list of accounts</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and accounts arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.acounts.list(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, accounts)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/accounts.js#L25-L37'><code>accounts.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='accounts/get' href='#accounts/get'>
+                  <code>
+                    get<span class='gray'>(callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Get an account</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and account arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.acounts.get(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, account)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/accounts.js#L73-L76'><code>accounts.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='accounts/delete' href='#accounts/delete'>
+                  <code>
+                    delete<span class='gray'>(callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Delete an account</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error argument</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.acounts.delete(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/accounts.js#L49-L61'><code>accounts.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='accounts/create' href='#accounts/create'>
+                  <code>
+                    create<span class='gray'>(callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Create an account</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and account arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.acounts.create(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, account)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+            
+            
+            </div>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/index.js#L18-L32'><code>index.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='flatsheet' href='#flatsheet'>
+                  <code>
+                    Flatsheet<span class='gray'>(options, options.host, options.username, options.password)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Flatsheet API Client</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>options</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></td>
+                        <td><p>options for the api client</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>options.host</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+                        <td><p>flatsheet server host</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>options.username</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+                        <td><p>username, only needed if making POST, PUT, DELETE requests</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>options.password</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+                        <td><p>password, only needed if making POST, PUT, DELETE requests</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre><span class="hljs-keyword">var</span> flatsheet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'flatsheet-api-client'</span>);
+            <span class="hljs-keyword">var</span> client = flatsheet();</pre>
+            
+            
+            
+            </div>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/sheets.js#L12-L15'><code>sheets.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='sheets' href='#sheets'>
+                  <code>
+                    Sheets<span class='gray'>(client)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Flatsheet Sheets</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>client</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></td>
+                        <td></td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre><span class="hljs-keyword">var</span> flatsheet = <span class="hljs-built_in">require</span>(<span class="hljs-string">'flatsheet-api-client'</span>);
+            <span class="hljs-keyword">var</span> client = flatsheet();
+            client.sheets.list()</pre>
+            
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/sheets.js#L26-L38'><code>sheets.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='sheets/get' href='#sheets/get'>
+                  <code>
+                    get<span class='gray'>(id, callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Get sheet</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>id</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+                        <td><p>the ID of the sheet</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and sheet arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.sheets.get(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, sheet)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/sheets.js#L64-L79'><code>sheets.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='sheets/update' href='#sheets/update'>
+                  <code>
+                    update<span class='gray'>(sheet, callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Update a sheet</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>sheet</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></td>
+                        <td><p>the sheet object</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and sheet arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.sheets.update(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, sheet)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/sheets.js#L99-L102'><code>sheets.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='sheets/delete' href='#sheets/delete'>
+                  <code>
+                    delete<span class='gray'>(id, callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Delete a sheet</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>id</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+                        <td><p>the ID of the sheet</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error argument</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.sheets.delete(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/sheets.js#L51-L64'><code>sheets.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='sheets/create' href='#sheets/create'>
+                  <code>
+                    create<span class='gray'>(the, callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Create a sheet</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>the</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></td>
+                        <td><p>sheet object</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and sheet arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.sheets.create(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, sheet)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/sheets.js#L79-L99'><code>sheets.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='sheets/addrow' href='#sheets/addrow'>
+                  <code>
+                    addRow<span class='gray'>(id, row, callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Add a row to a sheet</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>id</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code></td>
+                        <td><p>the ID of the sheet</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>row</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code></td>
+                        <td><p>an object that represents a row in the sheet</p>
+            </td>
+                      </tr>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and sheet arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.addRow(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, sheet)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+                  <div class='section-indent'>
+            <div class='mt3 mb2 px3 keyline-top'>
+                <div class='right py2'>
+                  <a class='fade font-smaller' href='https://github.com/flatsheet/flatsheet-javascript-client/blob/6b7e491fb9cdb1965a825bd215791dc575dac8cb/sheets.js#L38-L51'><code>sheets.js</code></a>
+                </div>
+              <h3 class='regular'>
+                <a class='black' id='sheets/list' href='#sheets/list'>
+                  <code>
+                    list<span class='gray'>(callback)</span>
+                  </code>
+                </a>
+              </h3>
+              <p>Get list of sheets</p>
+            
+              
+                <p>
+                  <table class='table-light overflow-hidden bg-cloudy-light'>
+                    <thead>
+                      <th class='col-3'>parameter</th>
+                      <th class='col-3'>type</th>
+                      <th class='col-6'>description</th>
+                    </thead>
+                      <tr>
+                        <td>callback</td>
+                        <td><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></code></td>
+                        <td><p>a callback with error and sheets arguments</p>
+            </td>
+                      </tr>
+                  </table>
+                </p>
+            
+            
+                <h4>Examples</h4>
+            <pre>client.sheets.list(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, sheets)</span>) </span>{
+            
+            })</pre>
+            
+            
+            
+            </div>
+                  </div>
+            
+            
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,82 +1,75 @@
-var request = require('request');
+var qs = require('querystring')
+var request = require('request')
 
-module.exports = Flatsheet;
+module.exports = Flatsheet
 
-function Flatsheet (opts) {
-  if (!(this instanceof Flatsheet)) return new Flatsheet(opts);
-  opts || (opts = {});
+/**
+ * Flatsheet API Client
+ * @class Flatsheet
+ * @param {Object} options options for the api client
+ * @param {String} options.host flatsheet server host
+ * @param {String} options.username username, only needed if making POST, PUT, DELETE requests
+ * @param {String} options.password password, only needed if making POST, PUT, DELETE requests
+ * @example
+ * var flatsheet = require('flatsheet-api-client');
+ * var client = flatsheet();
+ *
+ */
+function Flatsheet (options) {
+  if (!(this instanceof Flatsheet)) return new Flatsheet(options)
+  options || (options = {})
 
   this.account = {
-    username: opts.username || '',
-    password: opts.password || ''
+    username: options.username || '',
+    password: options.password || ''
   }
-  
-  this.host = opts.host || 'https://app.flatsheet.io';
-  this.apiVersion = opts.apiVersion || '/v2/';
+
+  this.host = options.host || 'https://app.flatsheet.io'
+  this.apiVersion = options.apiVersion || '/v2/'
+
+  this.sheets = require('./sheets')(this)
+  this.accounts = require('./accounts')(this)
 }
 
-Flatsheet.prototype.list = function list (cb) {
-  return this.req('get', 'sheets', {}, cb);
-};
+Flatsheet.prototype.request = function (method, path, params, cb) {
+  if (typeof params === 'function') {
+    cb = params
+    params = {}
+  }
 
-Flatsheet.prototype.index = Flatsheet.prototype.list;
+  var opts = {}
 
-Flatsheet.prototype.listAccounts = function listAccounts (cb) {
-  return this.req('get', 'accounts', {}, cb);
-};
+  if (method === 'get') {
+    params = qs.stringify(params)
+    opts.uri = this.fullUrl(path, params)
+  } else {
+    opts.uri = this.fullUrl(path)
+    opts.body = params
+  }
 
-Flatsheet.prototype.sheet = function sheet (id, cb) {
-  return this.req('get', 'sheets/' + id, {}, cb);
-};
+  opts.json = true
+  opts.method = method
 
-Flatsheet.prototype.fetch = Flatsheet.prototype.sheet;
-Flatsheet.prototype.get = Flatsheet.prototype.sheet;
-
-Flatsheet.prototype.create = function create (sheet, cb) {
-  return this.req('post', 'sheets', sheet, cb);
-};
-
-Flatsheet.prototype.update = function update (sheet, cb) {
-  return this.req('put', 'sheets/' + sheet.id, sheet, cb);
-};
-
-Flatsheet.prototype.destroy = function destroy (id, cb) {
-  return this.req('delete', 'sheets/' + id, {}, cb);
-};
-
-Flatsheet.prototype.addRow = function addRow (id, row, cb) {
-  var self = this;
-
-  this.sheet(id, function(err, req){
-    var sheet = req;
-    sheet.rows.push(row);
-    self.update(sheet, cb);
-  });
-};
-
-Flatsheet.prototype.req = function req (method, path, params, cb) {
-  var opts = {
-    method: method,
-    uri: this.fullUrl(path, params),
-    headers: {
+  if (this.account.username && this.account.password) {
+    opts.headers = {
       'Authorization': this.account.username + ':' + this.account.password
-    }, 
-    body: params,
-    json: true
-  };
-  
-  if (typeof cb === 'undefined') return request(opts);
-  else request(opts, getResponse);
-
-  function getResponse (error, response, body){
-    if (cb) {
-      if (error) return cb(error);
-      if (response.statusCode >= 400) return cb({ error: response.statusCode });
-      return cb(null, body);
     }
   }
-};
+
+  if (typeof cb === 'undefined') return request(opts)
+  else request(opts, getResponse)
+
+  function getResponse (error, response, body) {
+    if (cb) {
+      if (error) return cb(error)
+      if (response.statusCode >= 400) return cb({ error: response.statusCode })
+      return cb(null, body)
+    }
+  }
+}
 
 Flatsheet.prototype.fullUrl = function fullUrl (path, params) {
-  return this.host + '/api' + this.apiVersion + path + '/';
-};
+  var url = this.host + '/api' + this.apiVersion + path + '/'
+  if (params) url += '?' + params
+  return url
+}
