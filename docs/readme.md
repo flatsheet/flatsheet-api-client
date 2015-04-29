@@ -1,135 +1,288 @@
-# `Accounts`
+## `Accounts`
 
 Flatsheet Accounts
 
-| name | description |
-| ---- | ----------- |
-| `client` |  |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `client` | `Object` |  |
 
 
-# `Flatsheet`
+### Examples
+
+```js
+var flatsheet = require('flatsheet-api-client');
+var client = flatsheet();
+client.accounts.list()
+```
+
+
+## `Flatsheet`
 
 Flatsheet API Client
 
-| name | description |
-| ---- | ----------- |
-| `options` | options for the api client |
-| `options.host` | flatsheet server host |
-| `options.username` | username, only needed if making POST, PUT, DELETE requests |
-| `options.password` | password, only needed if making POST, PUT, DELETE requests |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `options` | `Object` | options for the api client |
+| `options.host` | `String` | flatsheet server host |
+| `options.username` | `String` | username, only needed if making POST, PUT, DELETE requests |
+| `options.password` | `String` | password, only needed if making POST, PUT, DELETE requests |
 
 
-# `get`
+### Examples
+
+```js
+var flatsheet = require('flatsheet-api-client');
+var client = flatsheet();
+```
+
+
+## `get`
 
 Get an account
 
-| name | description |
-| ---- | ----------- |
-| `callback` | a callback with error and account arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `callback` | `Function` | a callback with error and account arguments |
 
 
-# `Sheets`
+### Examples
+
+```js
+client.acounts.get(function (err, account)) {
+
+})
+```
+
+
+## `Sheets`
 
 Flatsheet Sheets
 
-| name | description |
-| ---- | ----------- |
-| `client` |  |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `client` | `Object` |  |
 
 
-# `addRow`
+### Examples
+
+```js
+var flatsheet = require('flatsheet-api-client');
+var client = flatsheet();
+client.sheets.list()
+```
+
+
+## `addRow`
 
 Add a row to a sheet
 
-| name | description |
-| ---- | ----------- |
-| `id` | the ID of the sheet |
-| `row` | an object that represents a row in the sheet |
-| `callback` | a callback with error and sheet arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `key` | `String` | the unique identifier of the sheet |
+| `row` | `Object` | an object that represents a row in the sheet |
+| `callback` | `Function` | a callback with error and sheet arguments |
 
 
-# `create`
+### Examples
+
+```js
+client.addRow(function (err, sheet)) {
+
+})
+```
+
+
+## `create`
 
 Create a sheet
 
-| name | description |
-| ---- | ----------- |
-| `the` | sheet object |
-| `callback` | a callback with error and sheet arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `the` | `Object` | sheet object |
+| `callback` | `Function` | a callback with error and sheet arguments |
 
 
-# `create`
+### Examples
+
+```js
+client.sheets.create(function (err, sheet)) {
+
+})
+```
+
+
+## `create`
 
 Create an account
 
-| name | description |
-| ---- | ----------- |
-| `callback` | a callback with error and account arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `callback` | `Function` | a callback with error and account arguments |
 
 
-# `delete`
+### Examples
+
+```js
+client.acounts.create(function (err, account)) {
+
+})
+```
+
+
+## `delete`
 
 Delete a sheet
 
-| name | description |
-| ---- | ----------- |
-| `id` | the ID of the sheet |
-| `callback` | a callback with error argument |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `key` | `String` | the unique identifier of the sheet |
+| `callback` | `Function` | a callback with error argument |
 
 
-# `delete`
+### Examples
+
+```js
+client.sheets.delete(function (err)) {
+
+})
+```
+
+
+## `delete`
 
 Delete an account
 
-| name | description |
-| ---- | ----------- |
-| `callback` | a callback with error argument |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `callback` | `Function` | a callback with error argument |
 
 
-# `get`
+### Examples
+
+```js
+client.acounts.delete(function (err)) {
+
+})
+```
+
+
+## `get`
 
 Get sheet
 
-| name | description |
-| ---- | ----------- |
-| `id` | the ID of the sheet |
-| `callback` | a callback with error and sheet arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `key` | `String` | the unique identifier of the sheet |
+| `callback` | `Function` | a callback with error and sheet arguments |
 
 
-# `list`
+### Examples
+
+```js
+client.sheets.get(function (err, sheet)) {
+
+})
+```
+
+
+## `list`
 
 Get list of accounts
 
-| name | description |
-| ---- | ----------- |
-| `callback` | a callback with error and accounts arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `callback` | `Function` | a callback with error and accounts arguments |
 
 
-# `list`
+### Examples
+
+```js
+client.acounts.list(function (err, accounts)) {
+
+})
+```
+
+
+## `list`
 
 Get list of sheets
 
-| name | description |
-| ---- | ----------- |
-| `callback` | a callback with error and sheets arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `callback` | `Function` | a callback with error and sheets arguments |
 
 
-# `update`
+### Examples
+
+```js
+client.sheets.list(function (err, sheets)) {
+
+})
+```
+
+
+## `update`
 
 Update a sheet
 
-| name | description |
-| ---- | ----------- |
-| `sheet` | the sheet object |
-| `callback` | a callback with error and sheet arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `sheet` | `Object` | the sheet object |
+| `callback` | `Function` | a callback with error and sheet arguments |
 
 
-# `update`
+### Examples
+
+```js
+client.sheets.update(function (err, sheet)) {
+
+})
+```
+
+
+## `update`
 
 Update an account
 
-| name | description |
-| ---- | ----------- |
-| `callback` | a callback with error and account arguments |
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `callback` | `Function` | a callback with error and account arguments |
+
+
+### Examples
+
+```js
+client.acounts.update(function (err, account)) {
+
+})
+```
 
 

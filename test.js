@@ -28,7 +28,7 @@ test('get specific sheet', function (t) {
   flatsheet.sheets.list(function (err, res) {
     t.notOk(err)
 
-    flatsheet.sheets.get(res[0].id, function (err, res) {
+    flatsheet.sheets.get(res[0].key, function (err, res) {
       t.notOk(err)
       t.ok(res)
       t.end()
@@ -61,7 +61,7 @@ test('add row to sheet', function (t) {
     t.notOk(err)
     var row = { pizza: 'wooaaaadddddaaaaoooo' }
 
-    flatsheet.sheets.addRow(res.id, row, function (err, res) {
+    flatsheet.sheets.addRow(res.key, row, function (err, res) {
       t.notOk(err)
       t.ok(res)
       t.end()
@@ -73,10 +73,10 @@ test('delete sheet', function (t) {
   flatsheet.sheets.create(sheet, function (err, res) {
     t.notOk(err)
 
-    flatsheet.sheets.delete(res.id, function (err) {
+    flatsheet.sheets.delete(res.key, function (err) {
       t.notOk(err)
 
-      flatsheet.sheets.get(res.id, function (err, res) {
+      flatsheet.sheets.get(res.key, function (err, res) {
         t.ok(err)
         t.equal(404, err.error)
         t.end()

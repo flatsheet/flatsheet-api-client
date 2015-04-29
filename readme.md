@@ -26,7 +26,7 @@ flatsheet.sheets.list(function(err, res){
 });
 
 /* specific sheet */
-flatsheet.sheets.get(sheetID, function (err, res){
+flatsheet.sheets.get(sheetKey, function (err, res){
   console.log(err, res);
 });
 ```
@@ -58,7 +58,7 @@ flatsheet.sheets.list(function(err, res){
 ### Get a specific sheet
 
 ```
-flatsheet.sheets.get(sheetID, function (err, res){
+flatsheet.sheets.get(sheetKey, function (err, res){
   console.log(err, res);
 });
 ```
@@ -86,7 +86,7 @@ flatsheet.sheets.create(sheet, function(err, res){
 ### Update a sheet
 
 ```
-flatsheet.sheets.get(sheetID, function (err, res) {
+flatsheet.sheets.get(sheetKey, function (err, res) {
   res.name = 'change the name of the sheet to this';
 
   flatsheet.sheets.update(res, function (err, res) {
@@ -100,7 +100,7 @@ flatsheet.sheets.get(sheetID, function (err, res) {
 ```
 var row = { pizza: 'wooaaaadddddaaaaoooo' };
 
-flatsheet.sheets.addRow(sheetID, row, function (err, res) {
+flatsheet.sheets.addRow(sheetKey, row, function (err, res) {
   console.log(err, res);
 });
 ```
@@ -108,8 +108,8 @@ flatsheet.sheets.addRow(sheetID, row, function (err, res) {
 ### Destroy a sheet
 
 ```
-flatsheet.sheets.delete(sheetID, function () {
-  flatsheet.sheets.get(sheetID, function (err, res) {
+flatsheet.sheets.delete(sheetKey, function () {
+  flatsheet.sheets.get(sheetKey, function (err, res) {
     console.log(err) /* { error: 404 } */
   });
 });

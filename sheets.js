@@ -16,15 +16,15 @@ function Sheets (client) {
 
 /**
 * Get sheet
-* @param {String} id the ID of the sheet
+* @param {String} key the unique identifier of the sheet
 * @param {Function} callback a callback with error and sheet arguments
 * @example
 * client.sheets.get(function (err, sheet)) {
 *
 * })
 */
-Sheets.prototype.get = function (id, cb) {
-  return this.client.request('get', 'sheets/' + id, null, cb)
+Sheets.prototype.get = function (key, cb) {
+  return this.client.request('get', 'sheets/' + key, null, cb)
 }
 
 /**
@@ -62,12 +62,12 @@ Sheets.prototype.create = function (sheet, cb) {
 * })
 */
 Sheets.prototype.update = function (sheet, cb) {
-  return this.client.request('put', 'sheets/' + sheet.id, sheet, cb)
+  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)
 }
 
 /**
 * Add a row to a sheet
-* @param {String} id the ID of the sheet
+* @param {String} key the unique identifier of the sheet
 * @param {Object} row an object that represents a row in the sheet
 * @param {Function} callback a callback with error and sheet arguments
 * @example
@@ -76,10 +76,10 @@ Sheets.prototype.update = function (sheet, cb) {
 * })
 *
 */
-Sheets.prototype.addRow = function addRow (id, row, cb) {
+Sheets.prototype.addRow = function addRow (key, row, cb) {
   var self = this
 
-  this.get(id, function (err, req) {
+  this.get(key, function (err, req) {
     if (err) return cb(err)
     var sheet = req
     sheet.rows.push(row)
@@ -89,13 +89,13 @@ Sheets.prototype.addRow = function addRow (id, row, cb) {
 
 /**
 * Delete a sheet
-* @param {String} id the ID of the sheet
+* @param {String} key the unique identifier of the sheet
 * @param {Function} callback a callback with error argument
 * @example
 * client.sheets.delete(function (err)) {
 *
 * })
 */
-Sheets.prototype.delete = function (id, cb) {
-  return this.client.request('delete', 'sheets/' + id, null, cb)
+Sheets.prototype.delete = function (key, cb) {
+  return this.client.request('delete', 'sheets/' + key, null, cb)
 }
