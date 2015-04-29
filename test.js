@@ -38,17 +38,17 @@ test('get specific sheet', function (t) {
 
 test('create sheet', function (t) {
   flatsheet.sheets.create(sheet, function (err, res) {
+    console.log(res)
     t.notOk(err)
     t.ok(res)
     t.end()
   })
 })
 
-test('update sheet', function (t) {
+test('update sheet metadata', function (t) {
   flatsheet.sheets.create(sheet, function (err, res) {
     t.notOk(err)
     res.name = 'new name'
-
     flatsheet.sheets.update(res, function (updateErr, updateRes) {
       t.equal(res.name, updateRes.name)
       t.end()
