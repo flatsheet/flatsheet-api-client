@@ -66,28 +66,6 @@ Sheets.prototype.update = function (sheet, cb) {
 }
 
 /**
-* Add a row to a sheet
-* @param {String} key the unique identifier of the sheet
-* @param {Object} row an object that represents a row in the sheet
-* @param {Function} callback a callback with error and sheet arguments
-* @example
-* client.addRow(function (err, sheet)) {
-*
-* })
-*
-*/
-Sheets.prototype.addRow = function addRow (key, row, cb) {
-  var self = this
-
-  this.get(key, function (err, req) {
-    if (err) return cb(err)
-    var sheet = req
-    sheet.rows.push(row)
-    self.update(sheet, cb)
-  })
-}
-
-/**
 * Delete a sheet
 * @param {String} key the unique identifier of the sheet
 * @param {Function} callback a callback with error argument
@@ -98,4 +76,85 @@ Sheets.prototype.addRow = function addRow (key, row, cb) {
 */
 Sheets.prototype.delete = function (key, cb) {
   return this.client.request('delete', 'sheets/' + key, null, cb)
+}
+
+/**
+* Get rows of a sheet
+* @param {Object} sheet the sheet object
+* @param {Function} callback a callback with error and rows arguments
+* @example
+* client.sheets.rows(function (err, rows)) {
+*
+* })
+*/
+Sheets.prototype.rows = function (key, opts, cb) {
+  if (typeof opts === 'function') {
+    var cb = opts
+    opts = {}
+  }
+  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)
+}
+
+/**
+* Add a row to a sheet
+* @param {String} key the unique identifier of the sheet
+* @param {Object} row an object that represents a row in the sheet
+* @param {Function} callback a callback with error and sheet arguments
+* @example
+* client.addRow(key, row, function (err, sheet)) {
+*
+* })
+*
+*/
+Sheets.prototype.addRow = function addRow (key, row, cb) {
+  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)
+}
+
+/**
+* Get a row of a sheet
+* @param {String} key the unique identifier of the sheet
+* @param {String} rowkey the unique identifier of the row
+* @param {Function} callback a callback with error and sheet arguments
+* @example
+* client.getRow(key, rowkey, function (err, sheet)) {
+*
+* })
+*
+*/
+Sheets.prototype.getRow = function getRow (key, rowkey, cb) {
+  if (typeof key === 'object') key = key.key
+  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)
+}
+
+/**
+* Update a row in a sheet
+* @param {String} key the unique identifier of the sheet
+* @param {Object} row an object that represents a row in the sheet
+* @param {Function} callback a callback with error and sheet arguments
+* @example
+* client.updateRow(function (err, sheet)) {
+*
+* })
+*
+*/
+Sheets.prototype.updateRow = function updateRow (key, row, cb) {
+  if (typeof key === 'object') key = key.key
+  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row, cb)
+}
+
+/**
+* Update a row in a sheet
+* @param {String} key the unique identifier of the sheet
+* @param {Object} row an object that represents a row in the sheet
+* @param {Function} callback a callback with error and sheet arguments
+* @example
+* client.updateRow(function (err, sheet)) {
+*
+* })
+*
+*/
+Sheets.prototype.deleteRow = function deleteRow (key, row, cb) {
+  if (typeof key === 'object') key = key.key
+  if (typeof row === 'string') row = { key: row }
+  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)
 }

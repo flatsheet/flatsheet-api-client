@@ -25,7 +25,7 @@ function Flatsheet (options) {
   }
 
   this.host = options.host || 'https://app.flatsheet.io'
-  this.apiVersion = options.apiVersion || '/v2/'
+  this.apiVersion = options.apiVersion || '/v3/'
 
   this.sheets = require('./sheets')(this)
   this.accounts = require('./accounts')(this)
