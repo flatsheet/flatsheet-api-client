@@ -132,14 +132,15 @@ Sheets.prototype.getRow = function getRow (key, rowkey, cb) {
 * @param {Object} row an object that represents a row in the sheet
 * @param {Function} callback a callback with error and sheet arguments
 * @example
-* client.updateRow(function (err, sheet)) {
+* client.updateRow(key, row, function (err, row)) {
 *
 * })
 *
 */
 Sheets.prototype.updateRow = function updateRow (key, row, cb) {
   if (typeof key === 'object') key = key.key
-  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row, cb)
+  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))
+  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)
 }
 
 /**
@@ -148,7 +149,7 @@ Sheets.prototype.updateRow = function updateRow (key, row, cb) {
 * @param {Object} row an object that represents a row in the sheet
 * @param {Function} callback a callback with error and sheet arguments
 * @example
-* client.updateRow(function (err, sheet)) {
+* client.deleteRow(key, row, function (err)) {
 *
 * })
 *

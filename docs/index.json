@@ -69,9 +69,9 @@
         }
       },
       "file": "/Users/sethvincent/workspace/flatsheet/api-client/index.js",
-      "code": "var qs = require('querystring')\nvar request = require('request')\n\nmodule.exports = Flatsheet\n\n/**\n * Flatsheet API Client\n * @class Flatsheet\n * @param {Object} options options for the api client\n * @param {String} options.host flatsheet server host\n * @param {String} options.username username, only needed if making POST, PUT, DELETE requests\n * @param {String} options.password password, only needed if making POST, PUT, DELETE requests\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n *\n */\nfunction Flatsheet (options) {\n  if (!(this instanceof Flatsheet)) return new Flatsheet(options)\n  options || (options = {})\n\n  this.account = {\n    username: options.username || '',\n    password: options.password || ''\n  }\n\n  this.host = options.host || 'https://app.flatsheet.io'\n  this.apiVersion = options.apiVersion || '/v2/'\n\n  this.sheets = require('./sheets')(this)\n  this.accounts = require('./accounts')(this)\n}\n\nFlatsheet.prototype.request = function (method, path, params, cb) {\n  if (typeof params === 'function') {\n    cb = params\n    params = {}\n  }\n\n  var opts = {}\n\n  if (method === 'get') {\n    params = qs.stringify(params)\n    opts.uri = this.fullUrl(path, params)\n  } else {\n    opts.uri = this.fullUrl(path)\n    opts.body = params\n  }\n\n  opts.json = true\n  opts.method = method\n\n  if (this.account.username && this.account.password) {\n    opts.headers = {\n      'Authorization': this.account.username + ':' + this.account.password\n    }\n  }\n\n  if (typeof cb === 'undefined') return request(opts)\n  else request(opts, getResponse)\n\n  function getResponse (error, response, body) {\n    if (cb) {\n      if (error) return cb(error)\n      if (response.statusCode >= 400) return cb({ error: response.statusCode })\n      return cb(null, body)\n    }\n  }\n}\n\nFlatsheet.prototype.fullUrl = function fullUrl (path, params) {\n  var url = this.host + '/api' + this.apiVersion + path + '/'\n  if (params) url += '?' + params\n  return url\n}\n",
+      "code": "var qs = require('querystring')\nvar request = require('request')\n\nmodule.exports = Flatsheet\n\n/**\n * Flatsheet API Client\n * @class Flatsheet\n * @param {Object} options options for the api client\n * @param {String} options.host flatsheet server host\n * @param {String} options.username username, only needed if making POST, PUT, DELETE requests\n * @param {String} options.password password, only needed if making POST, PUT, DELETE requests\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n *\n */\nfunction Flatsheet (options) {\n  if (!(this instanceof Flatsheet)) return new Flatsheet(options)\n  options || (options = {})\n\n  this.account = {\n    username: options.username || '',\n    password: options.password || ''\n  }\n\n  this.host = options.host || 'https://app.flatsheet.io'\n  this.apiVersion = options.apiVersion || '/v3/'\n\n  this.sheets = require('./sheets')(this)\n  this.accounts = require('./accounts')(this)\n}\n\nFlatsheet.prototype.request = function (method, path, params, cb) {\n  if (typeof params === 'function') {\n    cb = params\n    params = {}\n  }\n\n  var opts = {}\n\n  if (method === 'get') {\n    params = qs.stringify(params)\n    opts.uri = this.fullUrl(path, params)\n  } else {\n    opts.uri = this.fullUrl(path)\n    opts.body = params\n  }\n\n  opts.json = true\n  opts.method = method\n\n  if (this.account.username && this.account.password) {\n    opts.headers = {\n      'Authorization': this.account.username + ':' + this.account.password\n    }\n  }\n\n  if (typeof cb === 'undefined') return request(opts)\n  else request(opts, getResponse)\n\n  function getResponse (error, response, body) {\n    if (cb) {\n      if (error) return cb(error)\n      if (response.statusCode >= 400) return cb({ error: response.statusCode })\n      return cb(null, body)\n    }\n  }\n}\n\nFlatsheet.prototype.fullUrl = function fullUrl (path, params) {\n  var url = this.host + '/api' + this.apiVersion + path + '/'\n  if (params) url += '?' + params\n  return url\n}\n",
       "path": "index.js",
-      "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/index.js#L18-L32"
+      "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/index.js#L18-L32"
     },
     "params": [
       {
@@ -125,6 +125,453 @@
     ]
   },
   {
+    "description": "Flatsheet Accounts",
+    "tags": [
+      {
+        "title": "class",
+        "description": null,
+        "type": null,
+        "name": "Accounts"
+      },
+      {
+        "title": "param",
+        "description": null,
+        "type": {
+          "type": "NameExpression",
+          "name": "Object"
+        },
+        "name": "client"
+      },
+      {
+        "title": "example",
+        "description": "var flatsheet = require('flatsheet-api-client');\nvar client = flatsheet();\nclient.accounts.list()"
+      },
+      {
+        "title": "name",
+        "name": "Accounts"
+      },
+      {
+        "title": "kind",
+        "kind": "class"
+      }
+    ],
+    "context": {
+      "loc": {
+        "start": {
+          "line": 12,
+          "column": 0
+        },
+        "end": {
+          "line": 15,
+          "column": 1
+        }
+      },
+      "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
+      "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
+      "path": "accounts.js",
+      "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/accounts.js#L12-L15"
+    },
+    "params": [
+      {
+        "title": "param",
+        "description": null,
+        "type": {
+          "type": "NameExpression",
+          "name": "Object"
+        },
+        "name": "client"
+      }
+    ],
+    "examples": [
+      "<span class=\"hljs-keyword\">var</span> flatsheet = <span class=\"hljs-built_in\">require</span>(<span class=\"hljs-string\">'flatsheet-api-client'</span>);\n<span class=\"hljs-keyword\">var</span> client = flatsheet();\nclient.accounts.list()"
+    ],
+    "name": "Accounts",
+    "kind": "class",
+    "members": {
+      "instance": [
+        {
+          "description": "Update an account",
+          "tags": [
+            {
+              "title": "param",
+              "description": "a callback with error and account arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.acounts.update(function (err, account)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "update"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Accounts"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 61,
+                "column": 0
+              },
+              "end": {
+                "line": 73,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
+            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
+            "path": "accounts.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/accounts.js#L61-L73"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "a callback with error and account arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.acounts.update(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, account)</span>) </span>{\n\n})"
+          ],
+          "name": "update",
+          "kind": "function",
+          "memberof": "Accounts",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Accounts",
+            "update"
+          ]
+        },
+        {
+          "description": "Get list of accounts",
+          "tags": [
+            {
+              "title": "param",
+              "description": "a callback with error and accounts arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.acounts.list(function (err, accounts)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "list"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Accounts"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 37,
+                "column": 0
+              },
+              "end": {
+                "line": 49,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
+            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
+            "path": "accounts.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/accounts.js#L37-L49"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "a callback with error and accounts arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.acounts.list(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, accounts)</span>) </span>{\n\n})"
+          ],
+          "name": "list",
+          "kind": "function",
+          "memberof": "Accounts",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Accounts",
+            "list"
+          ]
+        },
+        {
+          "description": "Get an account",
+          "tags": [
+            {
+              "title": "param",
+              "description": "a callback with error and account arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.acounts.get(function (err, account)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "get"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Accounts"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 25,
+                "column": 0
+              },
+              "end": {
+                "line": 37,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
+            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
+            "path": "accounts.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/accounts.js#L25-L37"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "a callback with error and account arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.acounts.get(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, account)</span>) </span>{\n\n})"
+          ],
+          "name": "get",
+          "kind": "function",
+          "memberof": "Accounts",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Accounts",
+            "get"
+          ]
+        },
+        {
+          "description": "Delete an account",
+          "tags": [
+            {
+              "title": "param",
+              "description": "a callback with error argument",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.acounts.delete(function (err)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "delete"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Accounts"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 73,
+                "column": 0
+              },
+              "end": {
+                "line": 76,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
+            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
+            "path": "accounts.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/accounts.js#L73-L76"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "a callback with error argument",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.acounts.delete(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err)</span>) </span>{\n\n})"
+          ],
+          "name": "delete",
+          "kind": "function",
+          "memberof": "Accounts",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Accounts",
+            "delete"
+          ]
+        },
+        {
+          "description": "Create an account",
+          "tags": [
+            {
+              "title": "param",
+              "description": "a callback with error and account arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.acounts.create(function (err, account)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "create"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Accounts"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 49,
+                "column": 0
+              },
+              "end": {
+                "line": 61,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
+            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
+            "path": "accounts.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/accounts.js#L49-L61"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "a callback with error and account arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.acounts.create(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, account)</span>) </span>{\n\n})"
+          ],
+          "name": "create",
+          "kind": "function",
+          "memberof": "Accounts",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Accounts",
+            "create"
+          ]
+        }
+      ],
+      "static": []
+    },
+    "path": [
+      "Accounts"
+    ]
+  },
+  {
     "description": "Flatsheet Sheets",
     "tags": [
       {
@@ -167,9 +614,9 @@
         }
       },
       "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
-      "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  var self = this\n\n  this.get(key, function (err, req) {\n    if (err) return cb(err)\n    var sheet = req\n    sheet.rows.push(row)\n    self.update(sheet, cb)\n  })\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n",
+      "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
       "path": "sheets.js",
-      "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/sheets.js#L12-L15"
+      "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L12-L15"
     },
     "params": [
       {
@@ -189,6 +636,117 @@
     "kind": "class",
     "members": {
       "instance": [
+        {
+          "description": "Update a row in a sheet",
+          "tags": [
+            {
+              "title": "param",
+              "description": "the unique identifier of the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "key"
+            },
+            {
+              "title": "param",
+              "description": "an object that represents a row in the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "row"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and sheet arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.updateRow(key, row, function (err, row)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "updateRow"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Sheets"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 140,
+                "column": 0
+              },
+              "end": {
+                "line": 157,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
+            "path": "sheets.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L140-L157"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "the unique identifier of the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "key"
+            },
+            {
+              "title": "param",
+              "description": "an object that represents a row in the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "row"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and sheet arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.updateRow(key, row, <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, row)</span>) </span>{\n\n})"
+          ],
+          "name": "updateRow",
+          "kind": "function",
+          "memberof": "Sheets",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Sheets",
+            "updateRow"
+          ]
+        },
         {
           "description": "Update a sheet",
           "tags": [
@@ -237,14 +795,14 @@
                 "column": 0
               },
               "end": {
-                "line": 79,
+                "line": 77,
                 "column": 0
               }
             },
             "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
-            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  var self = this\n\n  this.get(key, function (err, req) {\n    if (err) return cb(err)\n    var sheet = req\n    sheet.rows.push(row)\n    self.update(sheet, cb)\n  })\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
             "path": "sheets.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/sheets.js#L64-L79"
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L64-L77"
           },
           "params": [
             {
@@ -283,11 +841,20 @@
           ]
         },
         {
-          "description": "Get list of sheets",
+          "description": "Get rows of a sheet",
           "tags": [
             {
               "title": "param",
-              "description": "a callback with error and sheets arguments",
+              "description": "the sheet object",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "sheet"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and rows arguments",
               "type": {
                 "type": "NameExpression",
                 "name": "Function"
@@ -296,11 +863,11 @@
             },
             {
               "title": "example",
-              "description": "client.sheets.list(function (err, sheets)) {\n\n})"
+              "description": "client.sheets.rows(function (err, rows)) {\n\n})"
             },
             {
               "title": "name",
-              "name": "list"
+              "name": "rows"
             },
             {
               "title": "kind",
@@ -317,23 +884,32 @@
           "context": {
             "loc": {
               "start": {
-                "line": 38,
+                "line": 90,
                 "column": 0
               },
               "end": {
-                "line": 51,
+                "line": 109,
                 "column": 0
               }
             },
             "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
-            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  var self = this\n\n  this.get(key, function (err, req) {\n    if (err) return cb(err)\n    var sheet = req\n    sheet.rows.push(row)\n    self.update(sheet, cb)\n  })\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
             "path": "sheets.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/sheets.js#L38-L51"
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L90-L109"
           },
           "params": [
             {
               "title": "param",
-              "description": "a callback with error and sheets arguments",
+              "description": "the sheet object",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "sheet"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and rows arguments",
               "type": {
                 "type": "NameExpression",
                 "name": "Function"
@@ -342,9 +918,9 @@
             }
           ],
           "examples": [
-            "client.sheets.list(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, sheets)</span>) </span>{\n\n})"
+            "client.sheets.rows(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, rows)</span>) </span>{\n\n})"
           ],
-          "name": "list",
+          "name": "rows",
           "kind": "function",
           "memberof": "Sheets",
           "scope": "instance",
@@ -354,7 +930,118 @@
           },
           "path": [
             "Sheets",
-            "list"
+            "rows"
+          ]
+        },
+        {
+          "description": "Get a row of a sheet",
+          "tags": [
+            {
+              "title": "param",
+              "description": "the unique identifier of the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "key"
+            },
+            {
+              "title": "param",
+              "description": "the unique identifier of the row",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "rowkey"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and sheet arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.getRow(key, rowkey, function (err, sheet)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "getRow"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Sheets"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 124,
+                "column": 0
+              },
+              "end": {
+                "line": 140,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
+            "path": "sheets.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L124-L140"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "the unique identifier of the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "key"
+            },
+            {
+              "title": "param",
+              "description": "the unique identifier of the row",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "rowkey"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and sheet arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.getRow(key, rowkey, <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, sheet)</span>) </span>{\n\n})"
+          ],
+          "name": "getRow",
+          "kind": "function",
+          "memberof": "Sheets",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Sheets",
+            "getRow"
           ]
         },
         {
@@ -410,9 +1097,9 @@
               }
             },
             "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
-            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  var self = this\n\n  this.get(key, function (err, req) {\n    if (err) return cb(err)\n    var sheet = req\n    sheet.rows.push(row)\n    self.update(sheet, cb)\n  })\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
             "path": "sheets.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/sheets.js#L26-L38"
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L26-L38"
           },
           "params": [
             {
@@ -494,18 +1181,18 @@
           "context": {
             "loc": {
               "start": {
-                "line": 99,
+                "line": 77,
                 "column": 0
               },
               "end": {
-                "line": 102,
+                "line": 90,
                 "column": 0
               }
             },
             "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
-            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  var self = this\n\n  this.get(key, function (err, req) {\n    if (err) return cb(err)\n    var sheet = req\n    sheet.rows.push(row)\n    self.update(sheet, cb)\n  })\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
             "path": "sheets.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/sheets.js#L99-L102"
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L77-L90"
           },
           "params": [
             {
@@ -541,6 +1228,117 @@
           "path": [
             "Sheets",
             "delete"
+          ]
+        },
+        {
+          "description": "Add a row to a sheet",
+          "tags": [
+            {
+              "title": "param",
+              "description": "the unique identifier of the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "key"
+            },
+            {
+              "title": "param",
+              "description": "an object that represents a row in the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "row"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and sheet arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.addRow(key, row, function (err, sheet)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "addRow"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Sheets"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 109,
+                "column": 0
+              },
+              "end": {
+                "line": 124,
+                "column": 0
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
+            "path": "sheets.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L109-L124"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "the unique identifier of the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "key"
+            },
+            {
+              "title": "param",
+              "description": "an object that represents a row in the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "row"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and sheet arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.addRow(key, row, <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, sheet)</span>) </span>{\n\n})"
+          ],
+          "name": "addRow",
+          "kind": "function",
+          "memberof": "Sheets",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Sheets",
+            "addRow"
           ]
         },
         {
@@ -596,9 +1394,9 @@
               }
             },
             "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
-            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  var self = this\n\n  this.get(key, function (err, req) {\n    if (err) return cb(err)\n    var sheet = req\n    sheet.rows.push(row)\n    self.update(sheet, cb)\n  })\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
             "path": "sheets.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/sheets.js#L51-L64"
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L51-L64"
           },
           "params": [
             {
@@ -637,29 +1435,11 @@
           ]
         },
         {
-          "description": "Add a row to a sheet",
+          "description": "Get list of sheets",
           "tags": [
             {
               "title": "param",
-              "description": "the unique identifier of the sheet",
-              "type": {
-                "type": "NameExpression",
-                "name": "String"
-              },
-              "name": "key"
-            },
-            {
-              "title": "param",
-              "description": "an object that represents a row in the sheet",
-              "type": {
-                "type": "NameExpression",
-                "name": "Object"
-              },
-              "name": "row"
-            },
-            {
-              "title": "param",
-              "description": "a callback with error and sheet arguments",
+              "description": "a callback with error and sheets arguments",
               "type": {
                 "type": "NameExpression",
                 "name": "Function"
@@ -668,11 +1448,11 @@
             },
             {
               "title": "example",
-              "description": "client.addRow(function (err, sheet)) {\n\n})"
+              "description": "client.sheets.list(function (err, sheets)) {\n\n})"
             },
             {
               "title": "name",
-              "name": "addRow"
+              "name": "list"
             },
             {
               "title": "kind",
@@ -689,18 +1469,111 @@
           "context": {
             "loc": {
               "start": {
-                "line": 79,
+                "line": 38,
                 "column": 0
               },
               "end": {
-                "line": 99,
+                "line": 51,
                 "column": 0
               }
             },
             "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
-            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  var self = this\n\n  this.get(key, function (err, req) {\n    if (err) return cb(err)\n    var sheet = req\n    sheet.rows.push(row)\n    self.update(sheet, cb)\n  })\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
             "path": "sheets.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/sheets.js#L79-L99"
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L38-L51"
+          },
+          "params": [
+            {
+              "title": "param",
+              "description": "a callback with error and sheets arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            }
+          ],
+          "examples": [
+            "client.sheets.list(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, sheets)</span>) </span>{\n\n})"
+          ],
+          "name": "list",
+          "kind": "function",
+          "memberof": "Sheets",
+          "scope": "instance",
+          "members": {
+            "instance": [],
+            "static": []
+          },
+          "path": [
+            "Sheets",
+            "list"
+          ]
+        },
+        {
+          "description": "Update a row in a sheet",
+          "tags": [
+            {
+              "title": "param",
+              "description": "the unique identifier of the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "String"
+              },
+              "name": "key"
+            },
+            {
+              "title": "param",
+              "description": "an object that represents a row in the sheet",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "row"
+            },
+            {
+              "title": "param",
+              "description": "a callback with error and sheet arguments",
+              "type": {
+                "type": "NameExpression",
+                "name": "Function"
+              },
+              "name": "callback"
+            },
+            {
+              "title": "example",
+              "description": "client.deleteRow(key, row, function (err)) {\n\n})"
+            },
+            {
+              "title": "name",
+              "name": "deleteRow"
+            },
+            {
+              "title": "kind",
+              "kind": "function"
+            },
+            {
+              "title": "memberof",
+              "description": "Sheets"
+            },
+            {
+              "title": "instance"
+            }
+          ],
+          "context": {
+            "loc": {
+              "start": {
+                "line": 157,
+                "column": 0
+              },
+              "end": {
+                "line": 161,
+                "column": 1
+              }
+            },
+            "file": "/Users/sethvincent/workspace/flatsheet/api-client/sheets.js",
+            "code": "module.exports = Sheets\n\n/**\n * Flatsheet Sheets\n * @class Sheets\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.sheets.list()\n */\nfunction Sheets (client) {\n  if (!(this instanceof Sheets)) return new Sheets(client)\n  this.client = client\n}\n\n/**\n* Get sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.get(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.get = function (key, cb) {\n  return this.client.request('get', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get list of sheets\n* @param {Function} callback a callback with error and sheets arguments\n* @example\n* client.sheets.list(function (err, sheets)) {\n*\n* })\n*/\nSheets.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'sheets', opts, cb)\n}\n\n/**\n* Create a sheet\n* @param {Object} the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.create(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.create = function (sheet, cb) {\n  return this.client.request('post', 'sheets', sheet, cb)\n}\n\n/**\n* Update a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.sheets.update(function (err, sheet)) {\n*\n* })\n*/\nSheets.prototype.update = function (sheet, cb) {\n  return this.client.request('put', 'sheets/' + sheet.key, sheet, cb)\n}\n\n/**\n* Delete a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Function} callback a callback with error argument\n* @example\n* client.sheets.delete(function (err)) {\n*\n* })\n*/\nSheets.prototype.delete = function (key, cb) {\n  return this.client.request('delete', 'sheets/' + key, null, cb)\n}\n\n/**\n* Get rows of a sheet\n* @param {Object} sheet the sheet object\n* @param {Function} callback a callback with error and rows arguments\n* @example\n* client.sheets.rows(function (err, rows)) {\n*\n* })\n*/\nSheets.prototype.rows = function (key, opts, cb) {\n  if (typeof opts === 'function') {\n    var cb = opts\n    opts = {}\n  }\n  return this.client.request('get', 'sheets/' + key + '/rows', opts, cb)\n}\n\n/**\n* Add a row to a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.addRow(key, row, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.addRow = function addRow (key, row, cb) {\n  return this.client.request('post', 'sheets/' + key + '/rows', row, cb)\n}\n\n/**\n* Get a row of a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {String} rowkey the unique identifier of the row\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.getRow(key, rowkey, function (err, sheet)) {\n*\n* })\n*\n*/\nSheets.prototype.getRow = function getRow (key, rowkey, cb) {\n  if (typeof key === 'object') key = key.key\n  return this.client.request('get', 'sheets/' + key + '/rows/' + rowkey, null, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.updateRow(key, row, function (err, row)) {\n*\n* })\n*\n*/\nSheets.prototype.updateRow = function updateRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (!row.key || row.value) return cb(new Error('row object must include key, value properties'))\n  return this.client.request('put', 'sheets/' + key + '/rows/' + row.key, row.value, cb)\n}\n\n/**\n* Update a row in a sheet\n* @param {String} key the unique identifier of the sheet\n* @param {Object} row an object that represents a row in the sheet\n* @param {Function} callback a callback with error and sheet arguments\n* @example\n* client.deleteRow(key, row, function (err)) {\n*\n* })\n*\n*/\nSheets.prototype.deleteRow = function deleteRow (key, row, cb) {\n  if (typeof key === 'object') key = key.key\n  if (typeof row === 'string') row = { key: row }\n  return this.client.request('delete', 'sheets/' + key + '/rows/' + row.key, row, cb)\n}",
+            "path": "sheets.js",
+            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/d7c04e30fdc4288a8a8ebea50e3f0af5771eeed6/sheets.js#L157-L161"
           },
           "params": [
             {
@@ -732,9 +1605,9 @@
             }
           ],
           "examples": [
-            "client.addRow(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, sheet)</span>) </span>{\n\n})"
+            "client.deleteRow(key, row, <span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err)</span>) </span>{\n\n})"
           ],
-          "name": "addRow",
+          "name": "deleteRow",
           "kind": "function",
           "memberof": "Sheets",
           "scope": "instance",
@@ -744,7 +1617,7 @@
           },
           "path": [
             "Sheets",
-            "addRow"
+            "deleteRow"
           ]
         }
       ],
@@ -752,453 +1625,6 @@
     },
     "path": [
       "Sheets"
-    ]
-  },
-  {
-    "description": "Flatsheet Accounts",
-    "tags": [
-      {
-        "title": "class",
-        "description": null,
-        "type": null,
-        "name": "Accounts"
-      },
-      {
-        "title": "param",
-        "description": null,
-        "type": {
-          "type": "NameExpression",
-          "name": "Object"
-        },
-        "name": "client"
-      },
-      {
-        "title": "example",
-        "description": "var flatsheet = require('flatsheet-api-client');\nvar client = flatsheet();\nclient.accounts.list()"
-      },
-      {
-        "title": "name",
-        "name": "Accounts"
-      },
-      {
-        "title": "kind",
-        "kind": "class"
-      }
-    ],
-    "context": {
-      "loc": {
-        "start": {
-          "line": 12,
-          "column": 0
-        },
-        "end": {
-          "line": 15,
-          "column": 1
-        }
-      },
-      "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
-      "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
-      "path": "accounts.js",
-      "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/accounts.js#L12-L15"
-    },
-    "params": [
-      {
-        "title": "param",
-        "description": null,
-        "type": {
-          "type": "NameExpression",
-          "name": "Object"
-        },
-        "name": "client"
-      }
-    ],
-    "examples": [
-      "<span class=\"hljs-keyword\">var</span> flatsheet = <span class=\"hljs-built_in\">require</span>(<span class=\"hljs-string\">'flatsheet-api-client'</span>);\n<span class=\"hljs-keyword\">var</span> client = flatsheet();\nclient.accounts.list()"
-    ],
-    "name": "Accounts",
-    "kind": "class",
-    "members": {
-      "instance": [
-        {
-          "description": "Update an account",
-          "tags": [
-            {
-              "title": "param",
-              "description": "a callback with error and account arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            },
-            {
-              "title": "example",
-              "description": "client.acounts.update(function (err, account)) {\n\n})"
-            },
-            {
-              "title": "name",
-              "name": "update"
-            },
-            {
-              "title": "kind",
-              "kind": "function"
-            },
-            {
-              "title": "memberof",
-              "description": "Accounts"
-            },
-            {
-              "title": "instance"
-            }
-          ],
-          "context": {
-            "loc": {
-              "start": {
-                "line": 61,
-                "column": 0
-              },
-              "end": {
-                "line": 73,
-                "column": 0
-              }
-            },
-            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
-            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
-            "path": "accounts.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/accounts.js#L61-L73"
-          },
-          "params": [
-            {
-              "title": "param",
-              "description": "a callback with error and account arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            }
-          ],
-          "examples": [
-            "client.acounts.update(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, account)</span>) </span>{\n\n})"
-          ],
-          "name": "update",
-          "kind": "function",
-          "memberof": "Accounts",
-          "scope": "instance",
-          "members": {
-            "instance": [],
-            "static": []
-          },
-          "path": [
-            "Accounts",
-            "update"
-          ]
-        },
-        {
-          "description": "Get list of accounts",
-          "tags": [
-            {
-              "title": "param",
-              "description": "a callback with error and accounts arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            },
-            {
-              "title": "example",
-              "description": "client.acounts.list(function (err, accounts)) {\n\n})"
-            },
-            {
-              "title": "name",
-              "name": "list"
-            },
-            {
-              "title": "kind",
-              "kind": "function"
-            },
-            {
-              "title": "memberof",
-              "description": "Accounts"
-            },
-            {
-              "title": "instance"
-            }
-          ],
-          "context": {
-            "loc": {
-              "start": {
-                "line": 37,
-                "column": 0
-              },
-              "end": {
-                "line": 49,
-                "column": 0
-              }
-            },
-            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
-            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
-            "path": "accounts.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/accounts.js#L37-L49"
-          },
-          "params": [
-            {
-              "title": "param",
-              "description": "a callback with error and accounts arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            }
-          ],
-          "examples": [
-            "client.acounts.list(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, accounts)</span>) </span>{\n\n})"
-          ],
-          "name": "list",
-          "kind": "function",
-          "memberof": "Accounts",
-          "scope": "instance",
-          "members": {
-            "instance": [],
-            "static": []
-          },
-          "path": [
-            "Accounts",
-            "list"
-          ]
-        },
-        {
-          "description": "Delete an account",
-          "tags": [
-            {
-              "title": "param",
-              "description": "a callback with error argument",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            },
-            {
-              "title": "example",
-              "description": "client.acounts.delete(function (err)) {\n\n})"
-            },
-            {
-              "title": "name",
-              "name": "delete"
-            },
-            {
-              "title": "kind",
-              "kind": "function"
-            },
-            {
-              "title": "memberof",
-              "description": "Accounts"
-            },
-            {
-              "title": "instance"
-            }
-          ],
-          "context": {
-            "loc": {
-              "start": {
-                "line": 73,
-                "column": 0
-              },
-              "end": {
-                "line": 76,
-                "column": 0
-              }
-            },
-            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
-            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
-            "path": "accounts.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/accounts.js#L73-L76"
-          },
-          "params": [
-            {
-              "title": "param",
-              "description": "a callback with error argument",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            }
-          ],
-          "examples": [
-            "client.acounts.delete(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err)</span>) </span>{\n\n})"
-          ],
-          "name": "delete",
-          "kind": "function",
-          "memberof": "Accounts",
-          "scope": "instance",
-          "members": {
-            "instance": [],
-            "static": []
-          },
-          "path": [
-            "Accounts",
-            "delete"
-          ]
-        },
-        {
-          "description": "Create an account",
-          "tags": [
-            {
-              "title": "param",
-              "description": "a callback with error and account arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            },
-            {
-              "title": "example",
-              "description": "client.acounts.create(function (err, account)) {\n\n})"
-            },
-            {
-              "title": "name",
-              "name": "create"
-            },
-            {
-              "title": "kind",
-              "kind": "function"
-            },
-            {
-              "title": "memberof",
-              "description": "Accounts"
-            },
-            {
-              "title": "instance"
-            }
-          ],
-          "context": {
-            "loc": {
-              "start": {
-                "line": 49,
-                "column": 0
-              },
-              "end": {
-                "line": 61,
-                "column": 0
-              }
-            },
-            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
-            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
-            "path": "accounts.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/accounts.js#L49-L61"
-          },
-          "params": [
-            {
-              "title": "param",
-              "description": "a callback with error and account arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            }
-          ],
-          "examples": [
-            "client.acounts.create(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, account)</span>) </span>{\n\n})"
-          ],
-          "name": "create",
-          "kind": "function",
-          "memberof": "Accounts",
-          "scope": "instance",
-          "members": {
-            "instance": [],
-            "static": []
-          },
-          "path": [
-            "Accounts",
-            "create"
-          ]
-        },
-        {
-          "description": "Get an account",
-          "tags": [
-            {
-              "title": "param",
-              "description": "a callback with error and account arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            },
-            {
-              "title": "example",
-              "description": "client.acounts.get(function (err, account)) {\n\n})"
-            },
-            {
-              "title": "name",
-              "name": "get"
-            },
-            {
-              "title": "kind",
-              "kind": "function"
-            },
-            {
-              "title": "memberof",
-              "description": "Accounts"
-            },
-            {
-              "title": "instance"
-            }
-          ],
-          "context": {
-            "loc": {
-              "start": {
-                "line": 25,
-                "column": 0
-              },
-              "end": {
-                "line": 37,
-                "column": 0
-              }
-            },
-            "file": "/Users/sethvincent/workspace/flatsheet/api-client/accounts.js",
-            "code": "module.exports = Accounts\n\n/**\n * Flatsheet Accounts\n * @class Accounts\n * @param {Object} client\n * @example\n * var flatsheet = require('flatsheet-api-client');\n * var client = flatsheet();\n * client.accounts.list()\n */\nfunction Accounts (client) {\n  if (!(this instanceof Accounts)) return new Accounts(client)\n  this.client = client\n}\n\n/**\n* Get an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.get(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.get = function (username, cb) {\n  return this.client.request('get', 'accounts/' + username, null, cb)\n}\n\n/**\n* Get list of accounts\n* @param {Function} callback a callback with error and accounts arguments\n* @example\n* client.acounts.list(function (err, accounts)) {\n*\n* })\n*/\nAccounts.prototype.list = function (opts, cb) {\n  return this.client.request('get', 'accounts', opts, cb)\n}\n\n/**\n* Create an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.create(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.create = function (opts, cb) {\n  return this.client.request('post', 'accounts', opts, cb)\n}\n\n/**\n* Update an account\n* @param {Function} callback a callback with error and account arguments\n* @example\n* client.acounts.update(function (err, account)) {\n*\n* })\n*/\nAccounts.prototype.update = function (username, opts, cb) {\n  return this.client.request('put', 'accounts/' + username, opts, cb)\n}\n\n/**\n* Delete an account\n* @param {Function} callback a callback with error argument\n* @example\n* client.acounts.delete(function (err)) {\n*\n* })\n*/\nAccounts.prototype.delete = function (username, cb) {\n  return this.client.request('delete', 'accounts/' + username, null, cb)\n}\n",
-            "path": "accounts.js",
-            "github": "https://github.com/flatsheet/flatsheet-javascript-client/blob/106a138b1b5d94b20366e6f2936e3f72503aa4a6/accounts.js#L25-L37"
-          },
-          "params": [
-            {
-              "title": "param",
-              "description": "a callback with error and account arguments",
-              "type": {
-                "type": "NameExpression",
-                "name": "Function"
-              },
-              "name": "callback"
-            }
-          ],
-          "examples": [
-            "client.acounts.get(<span class=\"hljs-function\"><span class=\"hljs-keyword\">function</span> <span class=\"hljs-params\">(err, account)</span>) </span>{\n\n})"
-          ],
-          "name": "get",
-          "kind": "function",
-          "memberof": "Accounts",
-          "scope": "instance",
-          "members": {
-            "instance": [],
-            "static": []
-          },
-          "path": [
-            "Accounts",
-            "get"
-          ]
-        }
-      ],
-      "static": []
-    },
-    "path": [
-      "Accounts"
     ]
   }
 ]
